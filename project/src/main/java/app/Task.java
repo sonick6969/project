@@ -84,9 +84,7 @@ public class Task {
                 Vector2i windowPos = windowCS.getCoords(p.pos.x, p.pos.y, ownCS);
                 canvas.drawRect(Rect.makeXYWH(windowPos.x - POINT_SIZE, windowPos.y - POINT_SIZE, POINT_SIZE * 2, POINT_SIZE * 2), paint);
             }
-        paint.setColor(Misc.getColor(0xAA, 0x11, 0xCC, 0x55));
-        Quadrangle q = new Quadrangle(new Vector2d(50, 50), new Vector2d(200, 50), new Vector2d(400, 100), new Vector2d(500, 500));
-        q.paint(canvas, paint);}
+        }
         canvas.restore();
     }
 

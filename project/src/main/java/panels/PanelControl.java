@@ -6,6 +6,7 @@ import controls.*;
 import io.github.humbleui.jwm.*;
 import io.github.humbleui.skija.Canvas;
 import misc.CoordinateSystem2i;
+import misc.Vector2d;
 import misc.Vector2i;
 
 import java.util.ArrayList;
@@ -56,17 +57,16 @@ public class PanelControl extends GridPanel {
                 window, false, backgroundColor, PANEL_PADDING,
                 6, 7, 0, 3, 3, 1, "Добавить новую\nточку",
                 true, true);
-        /*addToFirstSet.setOnClick(() -> {
-            // если числа введены верно
+        addPoint.setOnClick(() -> {
             if (!xField.hasValidDoubleValue()) {
                 PanelLog.warning("X координата введена неверно");
             } else if (!yField.hasValidDoubleValue())
                 PanelLog.warning("Y координата введена неверно");
             else
                 PanelRendering.task.addPoint(
-                        new Vector2d(xField.doubleValue(), yField.doubleValue()), Point.PointSet.FIRST_SET
+                        new Vector2d(xField.doubleValue(), yField.doubleValue())
                 );
-        });*/
+        });
         buttons.add(addPoint);
 
 
@@ -80,42 +80,41 @@ public class PanelControl extends GridPanel {
                 FIELD_TEXT_COLOR, true);
         inputs.add(cntField);
 
-        Button addTriangles = new Button(
+        Button addRandomPoints = new Button(
                 window, false, backgroundColor, PANEL_PADDING,
                 6, 7, 3, 4, 3, 1, "Добавить\nслучайные точки",
                 true, true);
-        /*addTriangles.setOnClick(() -> {
-            // если числа введены верно
+        addRandomPoints.setOnClick(() -> {
             if (!cntField.hasValidIntValue()) {
                 PanelLog.warning("кол-во точек указано неверно");
             } else
                 PanelRendering.task.addRandomPoints(cntField.intValue());
-        });*/
-        buttons.add(addTriangles);
+        });
+        buttons.add(addRandomPoints);
 
         // управление
         Button load = new Button(
                 window, false, backgroundColor, PANEL_PADDING,
                 6, 7, 0, 5, 3, 1, "Загрузить",
                 true, true);
-       /* load.setOnClick(() -> {
+        load.setOnClick(() -> {
             PanelRendering.load();
             cancelTask();
-        });*/
+        });
         buttons.add(load);
 
         Button save = new Button(
                 window, false, backgroundColor, PANEL_PADDING,
                 6, 7, 3, 5, 3, 1, "Сохранить",
                 true, true);
-        //save.setOnClick(PanelRendering::save);
+        save.setOnClick(PanelRendering::save);
         buttons.add(save);
 
         Button clear = new Button(
                 window, false, backgroundColor, PANEL_PADDING,
                 6, 7, 0, 6, 3, 1, "Очистить",
                 true, true);
-        //clear.setOnClick(() -> PanelRendering.task.clear());
+        clear.setOnClick(() -> PanelRendering.task.clear());
         buttons.add(clear);
 
         solve = new Button(

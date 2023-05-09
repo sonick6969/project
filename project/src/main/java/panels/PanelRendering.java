@@ -55,7 +55,7 @@ public class PanelRendering extends GridPanel {
         // создаём массив случайных точек
         ArrayList<Point> points = new ArrayList<>();
         task = new Task(cs, points);
-        task.addRandomPoints(10);
+
 
     }
 
