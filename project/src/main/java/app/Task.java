@@ -8,10 +8,7 @@ import io.github.humbleui.jwm.MouseButton;
 import io.github.humbleui.skija.Canvas;
 import io.github.humbleui.skija.Paint;
 import io.github.humbleui.skija.Rect;
-import misc.CoordinateSystem2d;
-import misc.CoordinateSystem2i;
-import misc.Vector2d;
-import misc.Vector2i;
+import misc.*;
 import panels.PanelLog;
 
 import java.util.ArrayList;
@@ -58,24 +55,12 @@ public class Task {
     /**
      * Список точек в пересечении
      */
-    private final ArrayList<Point> crossed;
-    /**
-     * Список точек в разности
-     */
-    private final ArrayList<Point> single;
 
-    /**
-     * Задача
-     *
-     * @param ownCS  СК задачи
-     * @param points массив точек
-     */
+
     @JsonCreator
     public Task(@JsonProperty("ownCS") CoordinateSystem2d ownCS, @JsonProperty("points") ArrayList<Point> points) {
         this.ownCS = ownCS;
         this.points = points;
-        this.crossed = new ArrayList<>();
-        this.single = new ArrayList<>();
     }
 
     /**
@@ -99,7 +84,9 @@ public class Task {
                 Vector2i windowPos = windowCS.getCoords(p.pos.x, p.pos.y, ownCS);
                 canvas.drawRect(Rect.makeXYWH(windowPos.x - POINT_SIZE, windowPos.y - POINT_SIZE, POINT_SIZE * 2, POINT_SIZE * 2), paint);
             }
-        }
+        paint.setColor(Misc.getColor(0xAA, 0x11, 0xCC, 0x55));
+        Quadrangle q = new Quadrangle(new Vector2d(50, 50), new Vector2d(200, 50), new Vector2d(400, 100), new Vector2d(500, 500));
+        q.paint(canvas, paint);}
         canvas.restore();
     }
 
@@ -159,8 +146,6 @@ public class Task {
      */
     public void solve() {
         // очищаем списки
-        crossed.clear();
-        single.clear();
 
         solved = true;
     }
@@ -188,20 +173,15 @@ public class Task {
      *
      * @return список пересечений
      */
-    @JsonIgnore
-    public ArrayList<Point> getCrossed() {
-        return crossed;
-    }
+
+
 
     /**
      * Получить список разности
      *
      * @return список разности
      */
-    @JsonIgnore
-    public ArrayList<Point> getSingle() {
-        return single;
-    }
+
 
     /**
      * Отмена решения задачи
