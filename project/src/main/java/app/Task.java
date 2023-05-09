@@ -103,16 +103,13 @@ public class Task {
      * @param mouseButton кнопка мыши
      */
     public void click(Vector2i pos, MouseButton mouseButton) {
-        /* if (lastWindowCS == null) return;
-        // получаем положение на экране
+        if (lastWindowCS == null) return;
         Vector2d taskPos = ownCS.getCoords(pos, lastWindowCS);
-        // если левая кнопка мыши, добавляем в первое множество
         if (mouseButton.equals(MouseButton.PRIMARY)) {
-            addPoint(taskPos, Point.PointSet.FIRST_SET);
-            // если правая, то во второе
+            addPoint(taskPos);
         } else if (mouseButton.equals(MouseButton.SECONDARY)) {
-            addPoint(taskPos, Point.PointSet.SECOND_SET);
-        }*/
+            addPoint(taskPos);
+        }
     }
 
 
