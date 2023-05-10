@@ -55,7 +55,8 @@ public class Task {
     /**
      * Список точек в пересечении
      */
-
+    private Quadrangle q = new Quadrangle(new Vector2d(0, 0), new Vector2d(0, 0), new Vector2d(0, 0), new Vector2d(0, 0));
+    private double S = 0;
 
     @JsonCreator
     public Task(@JsonProperty("ownCS") CoordinateSystem2d ownCS, @JsonProperty("points") ArrayList<Point> points) {
@@ -76,11 +77,13 @@ public class Task {
         canvas.save();
         // создаём перо
         try (var paint = new Paint()) {
+            paint.setColor(Misc.getColor(0xFF, 0xFF, 0xFF, 0xFF));
+            if (solved){
+                paint.setColor(Misc.getColor(0xAA, 0x11, 0xCC, 0x55));
+                q.paint(canvas, windowCS, ownCS, paint);
+                paint.setColor(Misc.getColor(0xFF, 0xFF, 0xFF, 0xFF));
+            }
             for (Point p : points) {
-                if (!solved) {
-                    paint.setColor(p.getColor());
-                } else {
-                }
                 Vector2i windowPos = windowCS.getCoords(p.pos.x, p.pos.y, ownCS);
                 canvas.drawRect(Rect.makeXYWH(windowPos.x - POINT_SIZE, windowPos.y - POINT_SIZE, POINT_SIZE * 2, POINT_SIZE * 2), paint);
             }
@@ -133,6 +136,8 @@ public class Task {
      */
     public void clear() {
         points.clear();
+        q = new Quadrangle(new Vector2d(0, 0), new Vector2d(0, 0), new Vector2d(0, 0), new Vector2d(0, 0));
+        S = 0;
         solved = false;
     }
 
@@ -140,8 +145,78 @@ public class Task {
      * Решить задачу
      */
     public void solve() {
-        // очищаем списки
 
+        for (int i1 = 0; i1 < points.size(); i1++)
+            for (int i2 = 0; i2 < points.size(); i2++)
+                for (int i3 = 0; i3 < points.size(); i3++)
+                    for (int i4 = 0; i4 < points.size(); i4++)
+                    {
+                        if (i1 == i2 || i1 == i3 || i1 == i4 || i2 == i3 || i3 == i4 || i2 == i4)
+                            continue;
+                        double x1 = points.get(i1).pos.x;
+                        double y1 = points.get(i1).pos.y;
+                        double x2 = points.get(i2).pos.x;
+                        double y2 = points.get(i2).pos.y;
+                        double x3 = points.get(i3).pos.x;
+                        double y3 = points.get(i3).pos.y;
+                        double x4 = points.get(i4).pos.x;
+                        double y4 = points.get(i4).pos.y;
+                        double a = Math.sqrt((y2 - y1)*(y2 - y1) + (x2 - x1)*(x2 - x1));
+                        double b = Math.sqrt((y3 - y2)*(y3 - y2) + (x2 - x3)*(x2 - x3));
+                        double c = Math.sqrt((y3 - y4)*(y3 - y4) + (x3 - x4)*(x3 - x4));
+                        double d = Math.sqrt((y4 - y1)*(y4 - y1) + (x4 - x1)*(x4 - x1));
+                        double e = Math.sqrt((y1 - y3)*(y1 - y3) + (x3 - x1)*(x3 - x1));
+                        double f = Math.sqrt((y2 - y4)*(y2 - y4) + (x2 - x4)*(x2 - x4));
+                        double c2 = (a * a + b * b - e * e)/(2 * a * b);
+                        double c1 = (a * a + d * d - f * f)/(2 * a * d);
+                        double c3 = (c * c + b * b - f * f)/(2 * b * c);
+                        double c4 = (d * d + c * c - e * e)/(2 * d * c);
+                        if (((float)((x3 - x1) / (x2 - x1)) == (float)((y3 - y1) / (y2 - y1))) || ((float)((x4 - x1) / (x3 - x2)) == (float)((y4 - y2) / (y3 - y2))) || ((float)((x1 - x3) / (x4 - x3)) == (float)((y1 - y3) / (y4 - y3))) || ((float)((x2 - x4) / (x1 - x4)) == (float)((y2 - y4) / (y1 - y4))))
+                            continue;
+                        double S_ = 0;
+                        if (((float)Math.acos(c1) + (float)Math.acos(c2) + (float)Math.acos(c3) + (float)Math.acos(c4)) == (float)(2 * Math.PI)) {
+                            double p1 = (a + b + e) / 2;
+                            double p2 = (c + d + e) / 2;
+                            S_ = Math.sqrt(p1 * (p1 - a) * (p1 - b) * (p1 - e)) + Math.sqrt(p2 * (p2 - c) * (p2 - d) * (p2 - e));
+                        }
+                        if (((float)Math.acos(c1) + (float)Math.acos(c2) + (float)Math.acos(c3)) == (float)Math.acos(c4))
+                        {
+                            double p1 = (a + b + f) / 2;
+                            double p2 = (c + d + f) / 2;
+                            S_ = Math.sqrt(p1 * (p1 - a) * (p1 - b) * (p1 - f)) + Math.sqrt(p2 * (p2 - c) * (p2 - d) * (p2 - f));
+                            //PanelLog.success("v4\n");
+                        }
+                        if (((float)Math.acos(c1) + (float)Math.acos(c3) + (float)Math.acos(c4)) == (float)Math.acos(c2))
+                        {
+                            double p1 = (a + d + f) / 2;
+                            double p2 = (b + c + f) / 2;
+                            S_ = Math.sqrt(p1 * (p1 - a) * (p1 - d) * (p1 - f)) + Math.sqrt(p2 * (p2 - b) * (p2 - c) * (p2 - f));
+                            //PanelLog.success("v2\n");
+                        }
+                        if (((float)Math.acos(c1) + (float)Math.acos(c2) + (float)Math.acos(c4)) == (float)Math.acos(c3))
+                        {
+                            double p1 = (a + b + e) / 2;
+                            double p2 = (c + d + e) / 2;
+                            S_ = Math.sqrt(p1 * (p1 - a) * (p1 - b) * (p1 - e)) + Math.sqrt(p2 * (p2 - c) * (p2 - d) * (p2 - e));
+                            //PanelLog.success("v3\n");
+                        }
+                        if (((float)Math.acos(c2) + (float)Math.acos(c3) + (float)Math.acos(c4)) == (float)Math.acos(c1))
+                        {
+                            double p1 = (a + b + e) / 2;
+                            double p2 = (c + d + e) / 2;
+                            S_ = Math.sqrt(p1 * (p1 - a) * (p1 - b) * (p1 - e)) + Math.sqrt(p2 * (p2 - c) * (p2 - d) * (p2 - e));
+                            //PanelLog.success("v1\n");
+                        }
+                            if (S_ > S)
+                            {
+                                S = S_;
+                                q = new Quadrangle(new Vector2d(x1, y1), new Vector2d(x2, y2), new Vector2d(x3, y3), new Vector2d(x4, y4));
+                                //PanelLog.success(String.valueOf(i1) + String.valueOf(i2) + String.valueOf(i3) + String.valueOf(i4) + " " + String.valueOf(S_));
+
+                            }
+
+                        //PanelLog.success(String.valueOf((Math.acos(c1) + Math.acos(c2) + Math.acos(c3) + Math.acos(c4)) == 2 * Math.PI));
+                    }
         solved = true;
     }
 
@@ -161,6 +236,10 @@ public class Task {
      */
     public ArrayList<Point> getPoints() {
         return points;
+    }
+    public Quadrangle getQ()
+    {
+        return q;
     }
 
     /**
@@ -192,5 +271,9 @@ public class Task {
      */
     public boolean isSolved() {
         return solved;
+    }
+    public double Answer()
+    {
+        return S;
     }
 }

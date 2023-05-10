@@ -97,17 +97,17 @@ public class PanelControl extends GridPanel {
                 window, false, backgroundColor, PANEL_PADDING,
                 6, 7, 0, 5, 3, 1, "Загрузить",
                 true, true);
-        load.setOnClick(() -> {
+        /*load.setOnClick(() -> {
             PanelRendering.load();
             cancelTask();
-        });
+        });*/
         buttons.add(load);
 
         Button save = new Button(
                 window, false, backgroundColor, PANEL_PADDING,
                 6, 7, 3, 5, 3, 1, "Сохранить",
                 true, true);
-        save.setOnClick(PanelRendering::save);
+        //save.setOnClick(PanelRendering::save);
         buttons.add(save);
 
         Button clear = new Button(
@@ -121,20 +121,21 @@ public class PanelControl extends GridPanel {
                 window, false, backgroundColor, PANEL_PADDING,
                 6, 7, 3, 6, 3, 1, "Решить",
                 true, true);
-        /*solve.setOnClick(() -> {
+        solve.setOnClick(() -> {
             if (!PanelRendering.task.isSolved()) {
                 PanelRendering.task.solve();
-                String s = "Задача решена\n" +
-                        "Пересечений: " + PanelRendering.task.getCrossed().size() / 2 + "\n" +
-                        "Отдельных точек: " + PanelRendering.task.getSingle().size();
-
+                String s;
+                if (PanelRendering.task.Answer() == 0)
+                    s = "Искомого четырехугольника не существует.\n";
+                else
+                    s = "Задача решена\n" + "Площадь искомого четырехугольника: " + PanelRendering.task.Answer()  + "\n";
                 PanelLog.success(s);
                 solve.text = "Сбросить";
             } else {
                 cancelTask();
             }
             window.requestFrame();
-        });*/
+        });
         buttons.add(solve);
     }
 
