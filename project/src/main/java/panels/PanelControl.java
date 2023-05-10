@@ -97,17 +97,17 @@ public class PanelControl extends GridPanel {
                 window, false, backgroundColor, PANEL_PADDING,
                 6, 7, 0, 5, 3, 1, "Загрузить",
                 true, true);
-        /*load.setOnClick(() -> {
+        load.setOnClick(() -> {
             PanelRendering.load();
             cancelTask();
-        });*/
+        });
         buttons.add(load);
 
         Button save = new Button(
                 window, false, backgroundColor, PANEL_PADDING,
                 6, 7, 3, 5, 3, 1, "Сохранить",
                 true, true);
-        //save.setOnClick(PanelRendering::save);
+        save.setOnClick(PanelRendering::save);
         buttons.add(save);
 
         Button clear = new Button(

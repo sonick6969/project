@@ -1,6 +1,8 @@
 package app;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.github.humbleui.skija.Canvas;
 import io.github.humbleui.skija.Paint;
 import misc.CoordinateSystem2d;
@@ -14,7 +16,8 @@ public class Quadrangle{
     public final Vector2d C;
     public final Vector2d D;
 
-    public Quadrangle(Vector2d A, Vector2d B, Vector2d C, Vector2d D) {
+    @JsonCreator
+    public Quadrangle(@JsonProperty("A") Vector2d A, @JsonProperty("B") Vector2d B, @JsonProperty("C") Vector2d C, @JsonProperty("D") Vector2d D) {
         this.A = A;
         this.B = B;
         this.C = C;
